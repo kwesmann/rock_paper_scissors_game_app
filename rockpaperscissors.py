@@ -1,6 +1,5 @@
 import os
 import random
-#import math
 import customtkinter as ctk
 from PIL import Image, ImageTk, ImageDraw
 
@@ -27,7 +26,7 @@ BEATS = {"rock": "scissors", "scissors": "paper", "paper": "rock"}
 WIN_SCORE = 5
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PIC_DIR = os.path.join(BASE_DIR, "image")
+PIC_DIR = os.path.join(BASE_DIR, "images")
 
 
 def load_symbol_images(prefix, size):
@@ -66,11 +65,11 @@ class SplashScreen(ctk.CTkToplevel):
         self.attributes("-topmost", True)
         self.configure(fg_color=APP_BG)
 
-        image1 = Image.open('images/rpslogo.jpg')
-        image1 = image1.resize((200, 200),)
+        image1 = Image.open(os.path.join(BASE_DIR, 'images', 'rpslogo.jpg'))
+        image1 = image1.resize((150, 150),)
         image1 = ImageTk.PhotoImage(image1)
 
-        w, h = 460, 300
+        w, h = 500, 400
         x = (self.winfo_screenwidth() - w) // 2
         y = (self.winfo_screenheight() - h) // 2
         self.geometry(f"{w}x{h}+{x}+{y}")
@@ -575,6 +574,11 @@ class RPSApp(ctk.CTk):
         self.resizable(False, False)
         self.configure(fg_color=APP_BG)
 
+        try:
+            self.iconbitmap(os.path.join(BASE_DIR, 'images', 'rpslogo.ico'))
+        except Exception:
+            pass
+
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
@@ -606,13 +610,16 @@ class RPSApp(ctk.CTk):
 
     def show_menu(self):
         self.clear_container()
-        MenuView(self.container, self.start_game,
-                 fg_color=APP_BG).pack(fill="both", expand=True)
+        MenuView(self.container, self.start_game, fg_color=APP_BG).pack(fill="both", expand=True)
 
     def start_game(self, mode):
         self.clear_container()
-        GameView(self.container, mode, self.show_menu,
-                 fg_color=APP_BG).pack(fill="both", expand=True)
+        GameView(
+            self.container, 
+            mode, 
+            self.show_menu, 
+            fg_color=APP_BG
+        ).pack(fill="both", expand=True)
 
 
 if __name__ == "__main__":
